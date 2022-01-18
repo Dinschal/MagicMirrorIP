@@ -54,6 +54,46 @@
         };
   },
 
+ /**
+ * @function getTemplate
+ * @description Nunjuck template
+ * @override
+ *
+ * @returns {string} path to nunjuck template
+ */
+
+ getTemplate() {
+        return 'templates/MagicMirrorIP.njk';
+ }
+
+ /**
+ * @function getTemplateData
+ * @description data that is needed to render the nunjuck template
+ * @override
+ *
+ * returns {Object} data for nunjuck template
+ */
+
+ getTemplateData() {
+        return {
+        config: this.config,
+        interfaces: this.interfaces,
+        };
+ },
+
+ /**
+ * @function start
+ * @description adds nunjuck globals and requests network interfaces from node_helper
+ * @override
+ *
+ * @returns {void}
+ */
+
+ start() {
+        Log.info(`Starting module: ${this.name}`);
+        this.addGlobals();
+        this.sendSocketNotification('GET_NETWORK_INFERFACES');
+ },
 
 
 
