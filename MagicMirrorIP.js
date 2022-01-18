@@ -63,7 +63,7 @@
  */
 
  getTemplate() {
-        return 'templates/MagicMirrorIP.njk';
+        return 'template/MagicMirrorIP.njk';
  }
 
  /**
@@ -95,6 +95,65 @@
         this.sendSocketNotification('GET_NETWORK_INFERFACES');
  },
 
+  /**
+  * @function socketNotificationReceived
+  * @description Handles incoming messages from node_helper.
+  * @override
+  *
+  * @param {string} notification - notification name
+  * @param {*} payload - detailed payload of the notification.
+  */
 
+  socketNotificationReceived(notification, payload) {
+        if (notification === 'NETWORK_INTERFACES') {
+            this.interfaces = payload;
+            Log.info('interfaces', payload);
+            this.updateDom(300);
+        }
+    },
+
+  /**
+  * @function getMacAddress
+  * @description Helper function to get mac adress from array item.
+  *
+  * @param {Object[]} array - Objects with property mac for the mac address.
+  *
+  * @returns {string} Mac address or empty string.
+  */
+
+  getMacAddress(array= []) {
+        for (const item of array) {
+            if (item.mac) {
+                return `(MAC: ${item.mac})`;
+            }
+        }
+
+        return '';
+    },
+
+  /**
+  * @function includes
+  * @description Helper function to check if item is included in the array.
+  *
+  * @param {string[]} array - Array of texts.
+  * @param {string} item - Text that should be checked for.
+  *
+  * @returns {boolean} Is the item included in the array?
+  */
+
+  includes(array= [], item) {
+        return array.includes(item);
+    },
+
+  /**
+  * @function addGlobals
+  * @description Adds custom globals used by the nunjuck template.
+  *
+  * @returns {void}
+  */
+
+  addGlobals() {
+        this.nunjucksEnvironment().addGlobal('includes', this.includes);
+    }
 
   }); //End of Module
